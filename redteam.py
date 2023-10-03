@@ -6,13 +6,6 @@ import sys
 
 import inquirer
 
-BASE_COMMAND = "".join(
-    "docker run --rm -v "
-    "/Users/tim/.stratus-red-team/:/root/.stratus-red-team/ "
-    f"-v {os.path.expanduser( '~' )}/.kube/config:/root/.kube/config "
-    "ghcr.io/datadog/stratus-red-team"
-)
-
 
 def get_available_platforms():
     """
@@ -24,7 +17,7 @@ def get_available_platforms():
     available_platforms = []
 
     list_output = (
-        subprocess.check_output(BASE_COMMAND + " list", shell=True)
+        subprocess.check_output(build_base_command() + " list", shell=True)
         .decode("utf-8")
         .split("\n")
     )
@@ -239,7 +232,9 @@ def main():
         attack = answers["attack"]
 
         print(f"\nRunning attack: {attack}")
-        subprocess.call(BASE_COMMAND + f" detonate {attack}", shell=True)
+        subprocess.call(
+            build_base_command(platform) + f" detonate {attack}", shell=True
+        )
     elif command == "status":
         status_list = get_status()
         print("\nAttack status:")
@@ -264,7 +259,7 @@ def main():
         attack = answers["attack"]
 
         print(f"\nCleaning up attack: {attack}")
-        subprocess.call(BASE_COMMAND + f" cleanup {attack}", shell=True)
+        subprocess.call(build_base_command() + f" cleanup {attack}", shell=True)
 
     elif command == "cleanup all":
         print("\nCleaning up all attacks")
@@ -277,7 +272,7 @@ def main():
 
         for attack in detonated_list:
             print(f"Cleaning up attack: {attack}")
-            subprocess.call(BASE_COMMAND + f" cleanup {attack}", shell=True)
+            subprocess.call(build_base_command() + f" cleanup {attack}", shell=True)
 
 
 if __name__ == "__main__":
