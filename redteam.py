@@ -1,6 +1,5 @@
 """Wrapper script for the stratus-red-team project to simplify usage."""
 
-import os
 import subprocess
 import sys
 
@@ -50,7 +49,7 @@ def get_platform():
             inquirer.List(
                 "platform",
                 message="What platform would you like to run on?",
-                choices=["aws", "k8s"]  # This should be replaced with get_available_platforms() once flags are found.
+                choices=["aws", "k8s"]  # TODO: replace with get_available_platforms().
             ),
         ]
         answers = inquirer.prompt(questions, raise_keyboard_interrupt=True)
@@ -71,11 +70,13 @@ def build_base_command(platform=""):
     Returns:
         str: The base command to run
     """
-
     if platform == "k8s":
         additional_flags = "-v /Users/tim/.kube/:/root/.kube/ "
     elif platform == "aws":
-        additional_flags = "-e AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY -e AWS_SESSION_TOKEN -e AWS_DEFAULT_REGION "
+        additional_flags = "".join(
+            "-e AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY "
+            "-e AWS_SESSION_TOKEN -e AWS_DEFAULT_REGION "
+        )
     else:
         additional_flags = ""
 
@@ -195,7 +196,6 @@ def do_cleanup(attack_id):
 
 def main():
     """Run the main function."""
-
     try:
         command = get_command()
     except KeyboardInterrupt:
