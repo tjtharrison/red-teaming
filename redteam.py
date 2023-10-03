@@ -50,7 +50,7 @@ def get_platform():
             inquirer.List(
                 "platform",
                 message="What platform would you like to run on?",
-                choices=get_available_platforms(),
+                choices=["aws", "k8s"]  # This should be replaced with get_available_platforms() once flags are found.
             ),
         ]
         answers = inquirer.prompt(questions, raise_keyboard_interrupt=True)
@@ -71,17 +71,18 @@ def build_base_command(platform=""):
     Returns:
         str: The base command to run
     """
+
     if platform == "k8s":
-        base_command = "".join(
-            "docker run --rm -v "
-            "/Users/tim/.stratus-red-team/:/root/.stratus-red-team/ "
-            f"-v {os.path.expanduser( '~' )}/.kube/config:/root/.kube/config "
-            "ghcr.io/datadog/stratus-red-team"
-        )
+        additional_flags = "-v /Users/tim/.kube/:/root/.kube/ "
+    elif platform == "aws":
+        additional_flags = "-e AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY -e AWS_SESSION_TOKEN -e AWS_DEFAULT_REGION "
     else:
-        base_command = "".join(
+        additional_flags = ""
+
+    base_command = "".join(
             "docker run --rm -v "
             "/Users/tim/.stratus-red-team/:/root/.stratus-red-team/ "
+            f"{additional_flags}"
             "ghcr.io/datadog/stratus-red-team"
         )
 
