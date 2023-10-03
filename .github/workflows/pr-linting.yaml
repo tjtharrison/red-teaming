@@ -27,7 +27,7 @@ jobs:
           commit_message: "Linted and formatted files"
       - name: "Code linting"
         run: |
-          python3 -m pylint --fail-under=9.5 $$(find . -name "*.py" -not -path "./tests/*")
+          python3 -m pylint --fail-under=9.5 $(find . -name "*.py" -not -path "./tests/*")
   docstring-linting:
     name: Docstring Linting
     runs-on: "ubuntu-latest"
