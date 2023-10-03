@@ -49,7 +49,10 @@ def get_platform():
             inquirer.List(
                 "platform",
                 message="What platform would you like to run on?",
-                choices=["aws", "k8s"]  # TODO: replace with get_available_platforms().
+                choices=[
+                    "aws",
+                    "k8s",
+                ],  # This should be replaced with get_available_platforms() once flags are found.
             ),
         ]
         answers = inquirer.prompt(questions, raise_keyboard_interrupt=True)
@@ -81,11 +84,11 @@ def build_base_command(platform=""):
         additional_flags = ""
 
     base_command = "".join(
-            "docker run --rm -v "
-            "/Users/tim/.stratus-red-team/:/root/.stratus-red-team/ "
-            f"{additional_flags}"
-            "ghcr.io/datadog/stratus-red-team"
-        )
+        "docker run --rm -v "
+        "/Users/tim/.stratus-red-team/:/root/.stratus-red-team/ "
+        f"{additional_flags}"
+        "ghcr.io/datadog/stratus-red-team"
+    )
 
     return base_command
 
