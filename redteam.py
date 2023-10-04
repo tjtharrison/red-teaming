@@ -261,9 +261,9 @@ def main():
         answers = inquirer.prompt(questions, raise_keyboard_interrupt=True)
 
         attack = answers["attack"]
-
+        platform = attack.split(".")[0]
         print(f"\nCleaning up attack: {attack}")
-        subprocess.call(build_base_command() + f" cleanup {attack}", shell=True)
+        subprocess.call(build_base_command(platform) + f" cleanup {attack}", shell=True)
 
     elif command == "cleanup all":
         print("\nCleaning up all attacks")
@@ -275,6 +275,7 @@ def main():
             sys.exit(0)
 
         for attack in detonated_list:
+            platform = attack.split(".")[0]
             print(f"Cleaning up attack: {attack}")
             subprocess.call(build_base_command() + f" cleanup {attack}", shell=True)
 
